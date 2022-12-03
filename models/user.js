@@ -34,7 +34,7 @@ class User {
   /** Authenticate: is this username/password valid? Returns boolean. */
 
   static async authenticate(username, password) {
-    const result = db.query(
+    const result = await db.query(
       `SELECT password FROM users
       WHERE username = $1`,
       [username]
@@ -46,9 +46,9 @@ class User {
   /** Update last_login_at for user */
 
   static async updateLoginTimestamp(username) {
-    const result = db.query(
+    const result = await db.query(
       `UPDATE users
-        SET last_login_at AS current_timestamp
+        SET last_login_at = current_timestamp
         WHERE username = $1
         RETURNING username`,
       [username]
@@ -114,7 +114,7 @@ class User {
    */
 
   static async messagesFrom(username) {
-    const results = db.query(
+    const results = await db.query(
       `SELECT m.id,
               m.to_username,
               u.first_name,
@@ -124,7 +124,7 @@ class User {
               m.sent_at,
               m.read_at
           FROM messages AS m 
-            JOIN users AS u m.username = u.username
+            JOIN users AS u ON m.to_username = u.username
             WHERE from_username = $1`,
       [username]
     )
@@ -151,7 +151,7 @@ class User {
    */
 
   static async messagesTo(username) {
-    const results = db.query(
+    const results = await db.query(
       `SELECT m.id,
               m.from_username,
               u.first_name,
@@ -161,7 +161,7 @@ class User {
               m.sent_at,
               m.read_at
           FROM messages AS m 
-            JOIN users AS u m.username = u.username
+            JOIN users AS u ON m.from_username = u.username
             WHERE to_username = $1`,
       [username]
     )
