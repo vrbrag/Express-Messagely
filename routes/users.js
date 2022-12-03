@@ -10,8 +10,8 @@ const router = new Router();
  **/
 router.get('/', ensureLoggedIn, async (req, res, next) => {
    try {
-      const results = await User.all()
-      return res.json(results)
+      const users = await User.all()
+      return res.json({ users })
    } catch (e) {
       return next(e)
    }
@@ -24,8 +24,8 @@ router.get('/', ensureLoggedIn, async (req, res, next) => {
  **/
 router.get('/:username', ensureCorrectUser, async (req, res, next) => {
    try {
-      const result = await User.get(req.params.username)
-      return res.json(result)
+      const user = await User.get(req.params.username)
+      return res.json({ user })
    } catch (e) {
       return next(e)
    }
@@ -62,7 +62,7 @@ router.get('/:username/to', ensureCorrectUser, async (req, res, next) => {
 router.get('/:username/from', ensureCorrectUser, async (req, res, next) => {
    try {
       const results = await User.messagesFrom(req.params.username)
-      return res.json(results)
+      return res.json({ messages: results })
    } catch (e) {
       return next(e)
    }
