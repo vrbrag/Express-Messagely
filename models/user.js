@@ -1,6 +1,4 @@
 /** User class for message.ly */
-
-const { urlencoded } = require("body-parser")
 const db = require("../db")
 const ExpressError = require("../expressError")
 const bcrypt = require("bcrypt")
